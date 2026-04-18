@@ -1,0 +1,46 @@
+<!-- amenities-list.html -->
+<div class="min-h-screen bg-gray-50 px-4 py-10 font-[DM_Sans]">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="font-['DM_Serif_Display'] text-[28px] font-normal text-gray-900 tracking-[-0.3px]">Amenities</h1>
+      <p class="text-sm text-gray-500 font-light mt-1">Book facilities available in your society</p>
+    </div>
+
+    <!-- Loaded -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+         *ngIf="amenities$ | async as amenitiesList; else loading">
+      <div *ngFor="let a of amenitiesList"
+           class="bg-white border border-gray-200/60 rounded-[16px] p-5 flex flex-col gap-3 hover:border-gray-300 hover:shadow-sm transition-all">
+        <div class="w-9 h-9 rounded-[10px] bg-gray-100 flex items-center justify-center">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+            <path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#888780" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-[15px] font-medium text-gray-900 mb-1">{{ a.name }}</h2>
+          <p class="text-[13px] text-gray-500 font-light leading-relaxed">{{ a.description }}</p>
+        </div>
+        <a [routerLink]="['/amenities/book', a.id]"
+           class="mt-1 w-full h-9 rounded-[8px] bg-[#2C2C2A] text-[#F1EFE8] text-[13px] font-medium flex items-center justify-center hover:bg-[#444441] transition-all">
+          View Slots
+        </a>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <ng-template #loading>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div *ngFor="let i of [1,2,3]" class="bg-white border border-gray-200/60 rounded-[16px] p-5 animate-pulse">
+          <div class="w-9 h-9 rounded-[10px] bg-gray-100 mb-3"></div>
+          <div class="h-4 bg-gray-100 rounded w-2/3 mb-2"></div>
+          <div class="h-3 bg-gray-100 rounded w-full mb-1"></div>
+          <div class="h-3 bg-gray-100 rounded w-4/5 mb-4"></div>
+          <div class="h-9 bg-gray-100 rounded-[8px]"></div>
+        </div>
+      </div>
+    </ng-template>
+
+  </div>
+</div>

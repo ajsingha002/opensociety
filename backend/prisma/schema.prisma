@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ResidenceStatus {
+  RESIDING_OWNER
+  TENANT
+}
+
+enum BookingStatus {
+  CONFIRMED
+  PENDING
+  CANCELLED
+}
+
+// Added the Wing Enum as requested
+enum Wing {
+  A
+  B
+  C
+  D
+  E
+  F
+}
+
+model AmenityUser {
+  id              String          @id @default(uuid())
+  username        String          @unique
+  firstName       String
+  middleName      String?
+  lastName        String
+  dob             DateTime
+  residenceStatus ResidenceStatus
+  wing            Wing            // Now using the Enum
+  flatNumber      Int             // Sticking with Int
+  email           String          @unique
+  phoneNumber     String          @unique
+  password        String
+  blockedUntil    DateTime?       
+  bookings        Booking[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model Amenity {
+  id              String            @id @default(uuid())
+  name            String            @unique
+  description     String?
+  location        String?
+  capacity        Int               @default(1)
+  config          AmenityConfig?
+  quotas          AmenityQuota[]    
+  blockages       AmenityBlockage[] 
+  bookings        Booking[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model AmenityConfig {
+  id                 String   @id @default(uuid())
+  amenityId          String   @unique
+  amenity            Amenity  @relation(fields: [amenityId], references: [id])
+  slotDuration       Int      @default(30)
+  openWindowDays     Int      @default(1)
+  openWindowTime     String   @default("19:00")
+  penaltyHours       Int      @default(1)
+  penaltyDays        Int      @default(2)
+  weekendPenaltyDays Int      @default(14)
+}
+
+model AmenityQuota {
+  id          String   @id @default(uuid())
+  amenityId   String
+  amenity     Amenity  @relation(fields: [amenityId], references: [id])
+  limit       Int      @default(1)
+  period      String   @default("DAY")
+}
+
+model AmenityBlockage {
+  id           String    @id @default(uuid())
+  amenityId    String
+  amenity      Amenity   @relation(fields: [amenityId], references: [id])
+  dayOfWeek    Int?      
+  specificDate DateTime? 
+  startTime    String    
+  endTime      String    
+  reason       String?
+}
+
+model Booking {
+  id          String        @id @default(uuid())
+  startTime   DateTime
+  endTime     DateTime
+  userId      String
+  user        AmenityUser   @relation(fields: [userId], references: [id])
+  amenityId   String
+  amenity     Amenity       @relation(fields: [amenityId], references: [id])
+  status      BookingStatus @default(CONFIRMED)
+  flatNumber  Int           
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}

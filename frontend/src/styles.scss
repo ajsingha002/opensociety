@@ -1,0 +1,4 @@
+@use "tailwindcss";
+
+/* Point this to your app folder so it finds your HTML classes */
+@source "./app/**/*.{html,ts}";

@@ -1,0 +1,239 @@
+<div class="min-h-screen flex items-center justify-center py-10 px-4 bg-gray-50 font-[DM_Sans]">
+
+    <div class="w-full max-w-[640px]">
+
+        <!-- Brand header -->
+        <div class="text-center mb-8">
+            <div class="w-12 h-12 rounded-[14px] bg-[#2C2C2A] inline-flex items-center justify-center mb-5">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
+                    <path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#D3D1C7" stroke-width="1.5"
+                        stroke-linejoin="round" />
+                    <path d="M9 21V12h6v9" stroke="#D3D1C7" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h1 class="font-['DM_Serif_Display'] text-[28px] font-normal text-gray-900 tracking-[-0.3px] mb-1.5">
+                Eastern Groves
+            </h1>
+            <p class="text-sm text-gray-500 font-light">
+                Register to book amenities and manage your residence
+            </p>
+        </div>
+
+        <!-- Card -->
+        <div class="bg-white border border-gray-200/60 rounded-[20px] p-8">
+
+            <!-- Error banner -->
+            <div *ngIf="errorMessage" class="mb-5 px-3.5 py-2.5 bg-red-50 border border-red-200 rounded-[10px]">
+                <p class="text-[13px] text-red-700 font-medium">{{ errorMessage }}</p>
+            </div>
+
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-5">
+                <!-- Section label -->
+                <p class="text-[11px] font-medium text-gray-400 uppercase tracking-[0.6px]">Personal details</p>
+
+                <!-- Name row -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                    <div>
+                        <label class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">First
+                            Name</label>
+                        <input formControlName="firstName" type="text"
+                            [class.border-red-400]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
+                            class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                        <ng-container
+                            *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched">
+                            <p *ngIf="registerForm.get('firstName')?.errors?.['required']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">First name is required</p>
+                            <p *ngIf="registerForm.get('firstName')?.errors?.['maxlength']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Max 50 characters</p>
+                        </ng-container>
+                    </div>
+
+                    <div>
+                        <label class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">Middle Name
+                            <span class="text-gray-300 font-normal">(optional)</span></label>
+                        <input formControlName="middleName" type="text"
+                            class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                    </div>
+
+                    <div>
+                        <label class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">Last
+                            Name</label>
+                        <input formControlName="lastName" type="text"
+                            [class.border-red-400]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched"
+                            class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                        <ng-container
+                            *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched">
+                            <p *ngIf="registerForm.get('lastName')?.errors?.['required']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Last name is required</p>
+                            <p *ngIf="registerForm.get('lastName')?.errors?.['maxlength']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Max 50 characters</p>
+                        </ng-container>
+                    </div>
+
+                </div>
+
+                <!-- Username / Password -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+                    <div>
+                        <label
+                            class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">Username</label>
+                        <input formControlName="username" type="text"
+                            [class.border-red-400]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
+                            class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                        <ng-container
+                            *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched">
+                            <p *ngIf="registerForm.get('username')?.errors?.['required']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Username is required</p>
+                            <p *ngIf="registerForm.get('username')?.errors?.['minlength']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">At least 3 characters</p>
+                        </ng-container>
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">Password</label>
+                        <input formControlName="password" type="password"
+                            [class.border-red-400]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                            class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                        <ng-container
+                            *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                            <p *ngIf="registerForm.get('password')?.errors?.['required']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Password is required</p>
+                            <p *ngIf="registerForm.get('password')?.errors?.['minlength']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">At least 8 characters</p>
+                            <p *ngIf="registerForm.get('password')?.errors?.['maxlength']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Max 20 characters</p>
+                        </ng-container>
+                    </div>
+
+                </div>
+
+                <!-- Date of Birth -->
+                <div>
+                    <label class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">Date of
+                        Birth</label>
+                    <input formControlName="dob" type="date"
+                        [class.border-red-400]="registerForm.get('dob')?.invalid && registerForm.get('dob')?.touched"
+                        class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                    <ng-container *ngIf="registerForm.get('dob')?.invalid && registerForm.get('dob')?.touched">
+                        <p *ngIf="registerForm.get('dob')?.errors?.['required']"
+                            class="mt-1.5 text-[12px] text-red-500 font-medium">Date of birth is required</p>
+                        <p *ngIf="registerForm.get('dob')?.errors?.['minAge']"
+                            class="mt-1.5 text-[12px] text-red-500 font-medium">You must be at least 13 years old to
+                            register</p>
+                    </ng-container>
+                </div>
+
+                <!-- Divider -->
+                <div class="border-t border-gray-100 pt-5">
+                    <p class="text-[11px] font-medium text-gray-400 uppercase tracking-[0.6px] mb-5">Residence details
+                    </p>
+
+                    <!-- Wing / Flat / Status -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                        <div>
+                            <label
+                                class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">Wing</label>
+                            <select formControlName="wing"
+                                [class.border-red-400]="registerForm.get('wing')?.invalid && registerForm.get('wing')?.touched"
+                                class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                                <option value="" disabled>Select Wing</option>
+                                <option *ngFor="let w of wings" [value]="w">{{w}}</option>
+                            </select>
+                            <p *ngIf="registerForm.get('wing')?.invalid && registerForm.get('wing')?.touched"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Please select a wing</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">Flat
+                                Number</label>
+                            <input formControlName="flatNumber" type="number" placeholder="e.g. 101"
+                                [class.border-red-400]="registerForm.get('flatNumber')?.invalid && registerForm.get('flatNumber')?.touched"
+                                class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                            <ng-container
+                                *ngIf="registerForm.get('flatNumber')?.invalid && registerForm.get('flatNumber')?.touched">
+                                <p *ngIf="registerForm.get('flatNumber')?.errors?.['required']"
+                                    class="mt-1.5 text-[12px] text-red-500 font-medium">Flat number is required</p>
+                                <p *ngIf="registerForm.get('flatNumber')?.errors?.['min']"
+                                    class="mt-1.5 text-[12px] text-red-500 font-medium">Must be at least 1</p>
+                            </ng-container>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">Status</label>
+                            <select formControlName="residenceStatus"
+                                class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                                <option value="RESIDING_OWNER">Owner</option>
+                                <option value="TENANT">Tenant</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Email / Phone -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                    <div class="md:col-span-2">
+                        <label class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">Email
+                            Address</label>
+                        <input formControlName="email" type="email"
+                            [class.border-red-400]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+                            class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                        <ng-container *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+                            <p *ngIf="registerForm.get('email')?.errors?.['required']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Email is required</p>
+                            <p *ngIf="registerForm.get('email')?.errors?.['email']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Enter a valid email address</p>
+                        </ng-container>
+                    </div>
+
+                    <div class="md:col-span-1">
+                        <label class="block text-[13px] font-medium text-gray-500 mb-1.5 tracking-[0.2px]">Phone
+                            Number</label>
+                        <input formControlName="phoneNumber" type="tel"
+                            [class.border-red-400]="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched"
+                            class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
+                        <ng-container
+                            *ngIf="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched">
+                            <p *ngIf="registerForm.get('phoneNumber')?.errors?.['required']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Phone number is required</p>
+                            <p *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']"
+                                class="mt-1.5 text-[12px] text-red-500 font-medium">Enter a valid 10-digit number</p>
+                        </ng-container>
+                    </div>
+
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" [disabled]="!registerForm.valid"
+                    class="mt-2 w-full h-11 rounded-[10px] bg-[#2C2C2A] text-[#F1EFE8] text-sm font-medium flex items-center justify-center
+                   hover:bg-[#444441] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                    Register Member
+                </button>
+
+            </form>
+
+            <!-- Divider -->
+            <div class="flex items-center gap-3 my-6">
+                <div class="flex-1 h-px bg-gray-100"></div>
+                <span class="text-[12px] text-gray-400 tracking-[0.2px]">Already registered?</span>
+                <div class="flex-1 h-px bg-gray-100"></div>
+            </div>
+
+            <!-- Login link -->
+            <a routerLink="/login" href="/login"
+                class="w-full h-11 border border-gray-200 rounded-[10px] text-sm text-gray-700 font-normal flex items-center justify-center hover:bg-gray-50 hover:border-gray-300 transition-all">
+                Sign in to your account
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

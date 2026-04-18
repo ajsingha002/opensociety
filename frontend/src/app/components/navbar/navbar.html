@@ -1,0 +1,40 @@
+<nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60 font-[DM_Sans]">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-[8px] bg-[#2C2C2A] flex items-center justify-center">
+                <span class="text-[#F1EFE8] font-['DM_Serif_Display'] text-lg">O</span>
+            </div>
+            <span class="font-['DM_Serif_Display'] text-[20px] text-gray-900 tracking-tight">Open Society</span>
+        </div>
+
+        <div class="hidden md:flex items-center gap-6">
+            <a routerLink="/amenities" routerLinkActive="text-gray-900 font-medium"
+                [routerLinkActiveOptions]="{exact: true}"
+                class="text-[14px] text-gray-500 hover:text-gray-900 transition-colors">
+                Amenities
+            </a>
+            <a routerLink="/amenities/my-bookings" routerLinkActive="text-gray-900 font-medium"
+                class="text-[14px] text-gray-500 hover:text-gray-900 transition-colors">
+                My Bookings
+            </a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button
+                class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-all">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    class="text-gray-600">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </button>
+
+            <button (click)="onLogout()"
+                class="h-9 px-4 rounded-[8px] bg-[#2C2C2A] text-[#F1EFE8] text-[13px] font-medium hover:bg-[#444441] transition-all">
+                Logout
+            </button>
+        </div>
+
+    </div>
+</nav>
