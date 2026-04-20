@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AmenitiesService } from '../amenities.service';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-booking-form',
@@ -22,11 +21,15 @@ export class BookingFormComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
 
+  // Modal & Selection State
+  showModal: boolean = false;
+  selectedSlot: Date | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private service: AmenitiesService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -48,7 +51,7 @@ export class BookingFormComponent implements OnInit {
   }
 
   loadSlotsForDate(): void {
-    if (!this.amenity?.config) return;
+    if (!this.amenity?.id) return;
 
     this.service.getBookedSlots(this.amenity.id, this.selectedDate).subscribe({
       next: (booked) => {
@@ -57,7 +60,6 @@ export class BookingFormComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: () => {
-        // Non-fatal: generate slots anyway, just without booked state
         this.bookedSlots = [];
         this.generateSlots();
         this.cdr.detectChanges();
@@ -84,6 +86,7 @@ export class BookingFormComponent implements OnInit {
     end.setHours(eh, em, 0, 0);
 
     while (current < end) {
+      // Only push the slot if it is in the future
       if (current.getTime() > now.getTime()) {
         this.slots.push(new Date(current));
       }
@@ -91,7 +94,12 @@ export class BookingFormComponent implements OnInit {
     }
   }
 
-  isBooked(slot: Date): boolean {
+  /**
+   * UPDATED: Accepts Date | null to satisfy TypeScript compiler 
+   * when called from template with potentially null values.
+   */
+  isBooked(slot: Date | null): boolean {
+    if (!slot) return false;
     return this.bookedSlots.some(
       b => new Date(b.startTime).getTime() === slot.getTime()
     );
@@ -103,14 +111,26 @@ export class BookingFormComponent implements OnInit {
     this.loadSlotsForDate();
   }
 
-  book(time: Date): void {
-    if (this.isBooked(time)) return;
+  openConfirmation(slot: Date): void {
+    this.selectedSlot = slot;
+    this.showModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.selectedSlot = null;
+  }
+
+  confirmBooking(): void {
+    if (!this.selectedSlot || !this.amenity) return;
+
+    const slotToBook = this.selectedSlot;
+    this.closeModal();
+
     this.errorMessage = '';
     this.successMessage = '';
 
-    const payloadTime = time.toISOString();
-
-    this.service.bookSlot(this.amenity.id, payloadTime).subscribe({
+    this.service.bookSlot(this.amenity.id, slotToBook.toISOString()).subscribe({
       next: (res: any) => {
         this.successMessage = res.status === 'PENDING'
           ? 'You have been added to the waitlist for this slot.'

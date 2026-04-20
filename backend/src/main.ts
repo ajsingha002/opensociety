@@ -7,7 +7,7 @@ async function bootstrap() {
   
   // Enable CORS so Angular can talk to NestJS
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: 'http://192.168.29.131:4200',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });

@@ -1,7 +1,6 @@
 <div class="min-h-screen bg-gray-50 px-4 py-10 font-[DM_Sans]">
   <div class="max-w-5xl mx-auto">
 
-    <!-- Loading state -->
     <div *ngIf="loading" class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
       <div class="bg-white border border-gray-200/60 rounded-[16px] p-6 space-y-3">
         <div class="h-5 bg-gray-100 rounded w-2/3"></div>
@@ -17,27 +16,23 @@
     </div>
 
     <div *ngIf="!loading && amenity">
-
-      <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-[13px] text-gray-400 mb-6">
-        <a routerLink="/amenities" href="/amenities" class="hover:text-gray-700 transition-colors">Amenities</a>
+        <a routerLink="/amenities" class="hover:text-gray-700 transition-colors">Amenities</a>
         <span>/</span>
         <span class="text-gray-700">{{ amenity.name }}</span>
       </nav>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-        <!-- Left panel -->
         <div class="flex flex-col gap-4">
-
-          <!-- Amenity info -->
           <div class="bg-white border border-gray-200/60 rounded-[16px] p-5">
             <div class="w-9 h-9 rounded-[10px] bg-gray-100 flex items-center justify-center mb-3">
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
-                <path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#888780" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#888780" stroke-width="1.5"
+                  stroke-linejoin="round" />
               </svg>
             </div>
-            <h1 class="font-['DM_Serif_Display'] text-[22px] font-normal text-gray-900 tracking-[-0.2px] mb-1">{{ amenity.name }}</h1>
+            <h1 class="font-['DM_Serif_Display'] text-[22px] font-normal text-gray-900 tracking-[-0.2px] mb-1">{{
+              amenity.name }}</h1>
             <p class="text-[13px] text-gray-500 font-light leading-relaxed">{{ amenity.description }}</p>
 
             <div class="border-t border-gray-100 mt-4 pt-4" *ngIf="amenity.quotas?.length">
@@ -51,14 +46,13 @@
             </div>
           </div>
 
-          <!-- Date picker -->
           <div class="bg-white border border-gray-200/60 rounded-[16px] p-5">
-            <label class="block text-[11px] font-medium text-gray-400 uppercase tracking-[0.6px] mb-3">Select Date</label>
+            <label class="block text-[11px] font-medium text-gray-400 uppercase tracking-[0.6px] mb-3">Select
+              Date</label>
             <input type="date" [min]="minDate" [(ngModel)]="selectedDate" (change)="onDateChange()"
               class="w-full h-11 border border-gray-200 rounded-[10px] px-3.5 text-sm text-gray-900 bg-white outline-none transition-all focus:border-[#2C2C2A] focus:ring-2 focus:ring-[#2C2C2A]/[0.07]">
           </div>
 
-          <!-- Legend -->
           <div class="bg-white border border-gray-200/60 rounded-[16px] p-5">
             <p class="text-[11px] font-medium text-gray-400 uppercase tracking-[0.6px] mb-3">Legend</p>
             <div class="space-y-2">
@@ -68,28 +62,21 @@
               </div>
               <div class="flex items-center gap-2.5">
                 <span class="w-8 h-6 rounded-[6px] border border-red-100 bg-red-50 inline-block"></span>
-                <span class="text-[13px] text-gray-500">Booked</span>
+                <span class="text-[13px] text-gray-500">Booked (Waitlist available)</span>
               </div>
             </div>
           </div>
-
         </div>
 
-        <!-- Right panel: slots -->
         <div class="md:col-span-2 flex flex-col gap-4">
-
-          <!-- Error banner -->
           <div *ngIf="errorMessage" class="px-4 py-3 bg-red-50 border border-red-200 rounded-[10px]">
             <p class="text-[13px] text-red-700 font-medium">{{ errorMessage }}</p>
           </div>
-
-          <!-- Success banner -->
           <div *ngIf="successMessage" class="px-4 py-3 bg-green-50 border border-green-200 rounded-[10px]">
             <p class="text-[13px] text-green-700 font-medium">{{ successMessage }}</p>
           </div>
 
           <div class="bg-white border border-gray-200/60 rounded-[16px] p-5">
-
             <div class="flex items-center justify-between mb-5">
               <div>
                 <h2 class="text-[15px] font-medium text-gray-900">Slots</h2>
@@ -97,84 +84,58 @@
                   {{ selectedDate | date:'EEEE, MMMM d' }}
                 </p>
               </div>
-              <span *ngIf="slots.length > 0"
-                class="text-[12px] font-medium px-2.5 py-1 bg-gray-100 text-gray-500 rounded-full">
-                {{ slots.length - bookedSlots.length }} of {{ slots.length }} free
-              </span>
             </div>
 
-            <!-- Slot grid -->
             <div *ngIf="slots.length > 0" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
-              <ng-container *ngFor="let slot of slots">
+              <button *ngFor="let slot of slots" (click)="openConfirmation(slot)" [ngClass]="{
+                  'border-red-100 bg-red-50': isBooked(slot),
+                  'border-gray-200 bg-white hover:border-[#2C2C2A] hover:bg-[#2C2C2A] group': !isBooked(slot)
+                }"
+                class="h-14 rounded-[10px] border flex flex-col items-center justify-center gap-0.5 transition-all duration-150">
 
-                <!-- Booked slot -->
-                <div *ngIf="isBooked(slot)"
-                  class="h-14 rounded-[10px] border border-red-100 bg-red-50 flex flex-col items-center justify-center gap-0.5 cursor-not-allowed">
-                  <span class="text-[13px] font-medium text-red-300">{{ slot | date:'h:mm' }}</span>
-                  <span class="text-[11px] text-red-200">{{ slot | date:'a' }}</span>
-                </div>
-
-                <!-- Available slot -->
-                <button *ngIf="!isBooked(slot)"
-                  (click)="book(slot)"
-                  class="group h-14 rounded-[10px] border border-gray-200 flex flex-col items-center justify-center gap-0.5
-                         hover:border-[#2C2C2A] hover:bg-[#2C2C2A] transition-all duration-150">
-                  <span class="text-[13px] font-medium text-gray-700 group-hover:text-[#F1EFE8] transition-colors">
-                    {{ slot | date:'h:mm' }}
-                  </span>
-                  <span class="text-[11px] text-gray-400 group-hover:text-gray-300 transition-colors">
-                    {{ slot | date:'a' }}
-                  </span>
-                </button>
-
-              </ng-container>
+                <span class="text-[13px] font-medium transition-colors"
+                  [ngClass]="isBooked(slot) ? 'text-red-400' : 'text-gray-700 group-hover:text-[#F1EFE8]'">
+                  {{ slot | date:'h:mm' }}
+                </span>
+                <span class="text-[11px] transition-colors"
+                  [ngClass]="isBooked(slot) ? 'text-red-300' : 'text-gray-400 group-hover:text-gray-300'">
+                  {{ slot | date:'a' }}
+                </span>
+              </button>
             </div>
 
-            <!-- Empty: no slots for date -->
-            <div *ngIf="slots.length === 0 && selectedDate"
-                 class="flex flex-col items-center justify-center py-14 text-center">
-              <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    stroke="#B4B2A9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
+            <div *ngIf="slots.length === 0" class="flex flex-col items-center justify-center py-14 text-center">
               <p class="text-[14px] font-medium text-gray-500">No slots available</p>
               <p class="text-[13px] text-gray-400 mt-1">Try selecting a different date</p>
             </div>
-
-            <!-- Empty: no date selected -->
-            <div *ngIf="slots.length === 0 && !selectedDate"
-                 class="flex flex-col items-center justify-center py-14 text-center">
-              <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    stroke="#B4B2A9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
-              <p class="text-[14px] font-medium text-gray-500">Pick a date to see slots</p>
-              <p class="text-[13px] text-gray-400 mt-1">Available times will appear here</p>
-            </div>
-
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Top-level error (amenity failed to load) -->
-    <div *ngIf="!loading && !amenity && errorMessage"
-         class="bg-white border border-gray-200/60 rounded-[20px] flex flex-col items-center justify-center py-16 text-center">
-      <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-          <path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-            stroke="#F87171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+    <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div class="bg-white rounded-[20px] p-6 max-w-sm w-full shadow-2xl animate-in fade-in zoom-in duration-200">
+        <h3 class="text-[18px] font-semibold text-gray-900 mb-2">Confirm Booking</h3>
+        <p class="text-[14px] text-gray-500 leading-relaxed mb-6">
+          Book <strong>{{ amenity?.name }}</strong> on
+          <strong>{{ selectedSlot | date:'MMM d' }}</strong> at <strong>{{ selectedSlot | date:'h:mm a' }}</strong>?
+
+          <span *ngIf="selectedSlot && isBooked(selectedSlot)" class="block mt-2 text-red-500 font-medium italic">
+            This slot is full. You will be placed on the waitlist.
+          </span>
+        </p>
+
+        <div class="flex gap-3">
+          <button (click)="closeModal()"
+            class="flex-1 h-11 rounded-[12px] border border-gray-200 text-[13px] font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+          <button (click)="confirmBooking()"
+            class="flex-1 h-11 rounded-[12px] bg-[#2C2C2A] text-[#F1EFE8] text-[13px] font-medium hover:bg-black transition-colors">
+            Confirm
+          </button>
+        </div>
       </div>
-      <p class="text-[14px] font-medium text-gray-600">{{ errorMessage }}</p>
-      <a routerLink="/amenities" href="/amenities"
-         class="mt-4 h-9 px-5 rounded-[8px] bg-[#2C2C2A] text-[#F1EFE8] text-[13px] font-medium flex items-center justify-center hover:bg-[#444441] transition-all">
-        Back to Amenities
-      </a>
     </div>
 
   </div>

@@ -15,6 +15,7 @@ enum BookingStatus {
   CONFIRMED
   PENDING
   CANCELLED
+  NO_SHOW
 }
 
 // Added the Wing Enum as requested
@@ -40,6 +41,7 @@ model AmenityUser {
   email           String          @unique
   phoneNumber     String          @unique
   password        String
+  isAdmin         Boolean
   blockedUntil    DateTime?       
   bookings        Booking[]
   createdAt       DateTime        @default(now())
@@ -92,15 +94,17 @@ model AmenityBlockage {
 }
 
 model Booking {
-  id          String        @id @default(uuid())
-  startTime   DateTime
-  endTime     DateTime
-  userId      String
-  user        AmenityUser   @relation(fields: [userId], references: [id])
-  amenityId   String
-  amenity     Amenity       @relation(fields: [amenityId], references: [id])
-  status      BookingStatus @default(CONFIRMED)
-  flatNumber  Int           
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id                String        @id @default(uuid())
+  startTime         DateTime
+  endTime           DateTime
+  userId            String
+  user              AmenityUser   @relation(fields: [userId], references: [id])
+  amenityId         String
+  amenity           Amenity       @relation(fields: [amenityId], references: [id])
+  status            BookingStatus @default(CONFIRMED)
+  markedAsNoShowBy  String?      // ID of the AmenityUser (Admin) who marked it
+  noShowMarkedAt    DateTime?    // Timestamp of the action
+  flatNumber        Int           
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 }
